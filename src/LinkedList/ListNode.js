@@ -1,20 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Line } from "@visx/shape";
 import { Group } from "@visx/group";
-import { cool3, op } from "./App";
+import { cool3, op, RefsContext } from "../App";
 
-export default function ListNode({
-  nodeRef,
-  height,
-  width,
-  value,
-  offset,
-  ...rest
-}) {
+export default function ListNode({ height, width, value, offset, ...rest }) {
   const x = 2 * offset * width;
+  const refs = useContext(RefsContext);
 
   return (
-    <Group innerRef={nodeRef} color={cool3}>
+    <Group
+      innerRef={(el) => (refs[offset] = { ...refs[offset], nodeRef: el })}
+      color={cool3}
+      opacity={0}
+    >
       <rect
         width={width}
         height={height}
