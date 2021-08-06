@@ -13,16 +13,11 @@ export default function Canvas({ list, width, height }) {
       <rect x={0} y={0} width={width} height={height} fill="url(#bg)" rx={8} />
       <Group top={40} left={40}>
         {list.map((e, i) => (
-          <Fragment key={i}>
-            <ListNode
-              nodeRef={e.ref}
-              width={60}
-              height={40}
-              value={e.value}
-              offset={i}
-            />
+          <Fragment key={e.id}>
+            <ListNode width={60} height={40} value={e.value} offset={i} />
             {i < list.length - 1 && (
               <Arrow
+                offset={i}
                 from={{ x: 60 * (5 / 6 + 2 * i), y: 40 / 2 }}
                 to={{ x: 60 * 2 * (i + 1), y: 40 / 2 }}
               />

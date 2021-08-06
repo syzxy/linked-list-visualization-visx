@@ -1,18 +1,31 @@
+import React, { useContext } from "react";
 import { Line } from "@visx/shape";
+import { Group } from "@visx/group";
 import { MarkerArrow } from "@visx/marker";
-import { cool3 } from "./App";
+import { cool3, RefsContext } from "./App";
 
-export default function Arrow({ from, to }) {
+export default function Arrow({ offset, from, to }) {
+  const refs = useContext(RefsContext);
+
   return (
-    <>
-      <MarkerArrow id="tip" fill={cool3} refX={8} size={8} />
+    <Group
+      innerRef={(el) => (refs[offset] = { ...refs[offset], pointerRef: el })}
+      opacity={0}
+      color={cool3}
+    >
+      <MarkerArrow
+        id={`tip${offset}`}
+        fill={"currentColor"}
+        refX={8}
+        size={8}
+      />
       <Line
         from={from}
         to={to}
-        stroke={cool3}
+        stroke={"currentcolor"}
         strokeWidth={1}
-        markerEnd="url(#tip)"
+        markerEnd={`url(#tip${offset})`}
       />
-    </>
+    </Group>
   );
 }

@@ -1,54 +1,93 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, createContext } from "react";
 import "./styles.css";
 import Canvas from "./Canvas";
 import anime from "animejs";
+
+export const RefsContext = createContext(null);
+// export const PointerRefsContext = createContext(null);
 
 const width = 700;
 const height = 500;
 export const cool1 = "#122549";
 export const cool3 = "#edffea";
+export const hot = "#eb4d70";
 export const op = 0.4;
 
 export default function App() {
   const [list, setList] = useState([
-    { value: 1, ref: useRef(null) },
-    { value: 2, ref: useRef(null) },
-    { value: 3, ref: useRef(null) },
-    { value: 4, ref: useRef(null) }
+    { id: 1, value: 1 },
+    { id: 2, value: 2 },
+    { id: 3, value: 3 },
+    { id: 4, value: 4 }
   ]);
-
-  const [tl, setTl] = useState(
-    anime.timeline({
-      easing: "easeInOutSine",
-      delay: anime.stagger(1000)
-    })
-  );
-
-  const highlight = () => {
-    setTl((c) =>
-      c.add({
-        targets: list.map((e) => e.ref.current.firstChild),
-        strokeDashoffset: [0, anime.setDashoffset, 0],
-        duration: 500
-      })
+  const refs = useRef([]);
+  const animatedRefs = useRef([]);
+  // const pointerRefs = useRef([]);
+  useEffect(() => {
+    refs.current = refs.current.slice(0, list.length);
+    // pointerRefs.current = pointerRefs.current.slice(0, list.length);
+    animatedRefs.current = refs.current.reduce(
+      (prev, { nodeRef, pointerRef }) => [...prev, nodeRef, pointerRef],
+      []
     );
+    animatedRefs.current.pop();
+    const tl = anime.timeline({ duration: 1000 }).add({
+      targets: animatedRefs.current,
+      opacity: 1
+    });
     tl.play();
+  }, [list]);
+
+  const highlight = (from = 0, to = animatedRefs.current.length) => {
+    return anime
+      .timeline({ easing: "easeInOutSine", delay: anime.stagger(300) })
+      .add({
+        targets: animatedRefs.current.slice(from, to),
+        color: [
+          { value: hot, duration: 300 },
+          { value: cool3, duration: 300 }
+        ]
+      });
+  };
+
+  const addLast = () => {
+    highlight().finished.then(() =>
+      setList((prev) => [...prev, { id: 5, value: 5 }])
+    );
+  };
+
+  const removeLast = () => {
+    highlight().finished.then(() =>
+      setList((prev) => prev.slice(0, prev.length - 1))
+    );
   };
 
   return (
     <div className="App">
-      <Canvas list={list} width={width} height={height} />
+      <RefsContext.Provider value={refs.current}>
+        <Canvas list={list} width={width} height={height} />
+      </RefsContext.Provider>
       <button
         style={{
-          display: "block",
-          margin: "1rem auto",
-          width: "120px",
+          margin: "1rem",
+          width: "200px",
           padding: "10px",
           fontSize: "20px"
         }}
-        onClick={highlight}
+        onClick={addLast}
       >
-        click
+        Add Last
+      </button>
+      <button
+        style={{
+          margin: "1rem",
+          width: "200px",
+          padding: "10px",
+          fontSize: "20px"
+        }}
+        onClick={removeLast}
+      >
+        Remve Last
       </button>
     </div>
   );
