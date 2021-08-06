@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, createContext } from "react";
 import "./styles.css";
-import Canvas from "./Canvas";
+import Canvas from "./LinkedList/Canvas";
 import anime from "animejs";
 
 export const RefsContext = createContext(null);

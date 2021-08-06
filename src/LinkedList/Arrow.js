@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Line } from "@visx/shape";
 import { Group } from "@visx/group";
 import { MarkerArrow } from "@visx/marker";
-import { cool3, RefsContext } from "./App";
+import { cool3, RefsContext } from "../App";
 
 export default function Arrow({ offset, from, to }) {
   const refs = useContext(RefsContext);

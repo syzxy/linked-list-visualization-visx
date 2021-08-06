@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Line } from "@visx/shape";
 import { Group } from "@visx/group";
-import { cool3, op, RefsContext } from "./App";
+import { cool3, op, RefsContext } from "../App";
 
 export default function ListNode({ height, width, value, offset, ...rest }) {
   const x = 2 * offset * width;
